@@ -1,4 +1,10 @@
-from .constant import DEFAULT_HOST
+from .constant import (
+    DEFAULT_HOST,
+    DEFAULT_AUTH_HOST,
+    TFA_CONSOLE_SOURCE,
+    TFA_EMAIL_TYPE,
+    PRELOAD_DAYS,
+    TFA_DEFAULT_HOST)
 
 
 class ArloCfg(object):
@@ -39,6 +45,10 @@ class ArloCfg(object):
     @property
     def host(self, default=DEFAULT_HOST):
         return self._kw.get('host', default)
+
+    @property
+    def auth_host(self, default=DEFAULT_AUTH_HOST):
+        return self._kw.get('auth_host', default)
 
     @property
     def dump(self, default=False):
@@ -99,3 +109,77 @@ class ArloCfg(object):
     @property
     def reconnect_every(self, default=0):
         return self._kw.get('reconnect_every', default) * 60
+
+    @property
+    def snapshot_timeout(self, default=45):
+        return self._kw.get('snapshot_timeout', default)
+
+    @property
+    def verbose(self, default=False):
+        return self._kw.get('verbose_debug', default)
+
+    @property
+    def hide_deprecated_services(self, default=False):
+        return self._kw.get('hide_deprecated_services', default)
+
+    @property
+    def tfa_source(self, default=TFA_CONSOLE_SOURCE):
+        return self._kw.get('tfa_source', default)
+
+    @property
+    def tfa_type(self, default=TFA_EMAIL_TYPE):
+        return self._kw.get('tfa_type', default).lower()
+
+    @property
+    def tfa_timeout(self, default=3):
+        return self._kw.get('tfa_timeout', default)
+
+    @property
+    def tfa_total_timeout(self, default=60):
+        return self._kw.get('tfa_total_timeout', default)
+
+    @property
+    def tfa_host(self, ):
+        return self._kw.get('tfa_host', TFA_DEFAULT_HOST)
+
+    @property
+    def tfa_username(self, default=None):
+        u = self._kw.get('tfa_username', default)
+        if u is None:
+            u = self.username
+        return u
+
+    @property
+    def tfa_password(self, default=None):
+        p = self._kw.get('tfa_password', default)
+        if p is None:
+            p = self.password
+        return p
+
+    @property
+    def wait_for_initial_setup(self, default=True):
+        return self._kw.get('wait_for_initial_setup', default)
+
+    @property
+    def save_state(self, default=True):
+        return self._kw.get('save_state', default)
+
+    @property
+    def state_file(self):
+        if self.save_state:
+            return self.storage_dir + '/' + self.name + '.pickle'
+        return None
+
+    @property
+    def dump_file(self):
+        if self.dump:
+            return self.storage_dir + '/' + 'packets.dump'
+        return None
+
+    @property
+    def library_days(self):
+        return self._kw.get('library_days', PRELOAD_DAYS)
+
+    @property
+    def synchronous_mode(self):
+        return self._kw.get('synchronous_mode', False)

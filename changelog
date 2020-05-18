@@ -1,4 +1,22 @@
 aarlo/pyaarlo
+0.7.0.alpha.2: State machine improvements.
+        Services.yaml now has all parameters
+		Allow recording longer than 30 seconds.
+0.7.0.alpha.1: First 0.7 test build
+0.6.89: Beta 2FA support
+0.6.17: Add request_snapshot webservice
+0.6.16: Fix last_image so lovelace card works
+        Arlo Baby: fix effect switching
+0.6.15: Copied services into aarlo domain
+0.6.14: Added unique keys
+        Fixed cry detection
+0.6.13: Tidy default alarm modes
+0.6.12: Added schedule parsing and monitoring
+0.6.11: Added brightness for lamps, fixed alarm issue
+0.6.10: Add nightlamp support and cry detection for Arlo Baby.
+0.6.9: Add object detected to last_captured sensor
+0.6.8: Siren support for VMB4500r2
+0.6.7: Arlo Baby media player support.
 0.6.6: fixed close, added code for alarms
 0.6.5: initial video doorbell support
 0.6.4: fixed versioning
