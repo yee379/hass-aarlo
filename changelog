@@ -1,7 +1,14 @@
 aarlo/pyaarlo
+0.7.0.alpha.4: Further State machine improvements.
+        Speed up startup.
+        Use new Home Assistant entitry names.
+0.7.0.alpha.3: Further State machine improvements.
+        Prefer streaming snapshot to idle snapshot.
+        Fix Direct I/O message.
+        Pyclewn linting.
 0.7.0.alpha.2: State machine improvements.
         Services.yaml now has all parameters
-		Allow recording longer than 30 seconds.
+        Allow recording longer than 30 seconds.
 0.7.0.alpha.1: First 0.7 test build
 0.6.89: Beta 2FA support
 0.6.17: Add request_snapshot webservice
@@ -83,3 +90,4 @@ old-version:
 0.0.2: Added manifest to aarlo
 0.0.1: Initial version
 
+# vim: set expandtab:

@@ -8,7 +8,6 @@ https://home-assistant.io/components/sensor.arlo/
 import logging
 import pprint
 
-import homeassistant.util.color as color_util
 from homeassistant.components.light import (ATTR_BRIGHTNESS,
                                             ATTR_COLOR_TEMP,
                                             ATTR_EFFECT,
@@ -17,7 +16,7 @@ from homeassistant.components.light import (ATTR_BRIGHTNESS,
                                             SUPPORT_COLOR,
                                             SUPPORT_COLOR_TEMP,
                                             SUPPORT_EFFECT,
-                                            Light)
+                                            LightEntity)
 from homeassistant.const import (ATTR_ATTRIBUTION,
                                  ATTR_BATTERY_CHARGING,
                                  ATTR_BATTERY_LEVEL)
@@ -60,7 +59,7 @@ async def async_setup_platform(hass, _config, async_add_entities, _discovery_inf
     async_add_entities(lights, True)
 
 
-class ArloLight(Light):
+class ArloLight(LightEntity):
 
     def __init__(self, light):
         """Initialize an Arlo light."""

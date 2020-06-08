@@ -9,7 +9,7 @@ import logging
 import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
-from homeassistant.components.binary_sensor import (BinarySensorDevice)
+from homeassistant.components.binary_sensor import (BinarySensorEntity)
 from homeassistant.const import (ATTR_ATTRIBUTION,
                                  CONF_MONITORED_CONDITIONS)
 from homeassistant.core import callback
@@ -65,7 +65,7 @@ async def async_setup_platform(hass, config, async_add_entities, _discovery_info
     async_add_entities(sensors, True)
 
 
-class ArloBinarySensor(BinarySensorDevice):
+class ArloBinarySensor(BinarySensorEntity):
     """An implementation of a Netgear Arlo IP sensor."""
 
     def __init__(self, device, sensor_type):
@@ -105,14 +105,12 @@ class ArloBinarySensor(BinarySensorDevice):
     @property
     def device_state_attributes(self):
         """Return the device state attributes."""
-        attrs = {}
-
-        attrs[ATTR_ATTRIBUTION] = COMPONENT_ATTRIBUTION
-        attrs['brand'] = COMPONENT_BRAND
-        attrs['friendly_name'] = self._name
-        attrs['camera_name'] = self._device.name
-
-        return attrs
+        return {
+            ATTR_ATTRIBUTION: COMPONENT_ATTRIBUTION,
+            'brand': COMPONENT_BRAND,
+            'friendly_name': self._name,
+            'camera_name': self._device.name
+        }
 
     @property
     def is_on(self):

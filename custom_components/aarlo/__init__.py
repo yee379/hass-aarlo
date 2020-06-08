@@ -9,6 +9,7 @@ import logging
 import json
 import pprint
 from datetime import timedelta
+from traceback import extract_stack
 
 import voluptuous as vol
 from requests.exceptions import HTTPError, ConnectTimeout
@@ -22,7 +23,7 @@ from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN
 from homeassistant.components.alarm_control_panel import DOMAIN as ALARM_DOMAIN
 from .pyaarlo.constant import SIREN_STATE_KEY, DEFAULT_HOST, DEFAULT_AUTH_HOST
 
-__version__ = '0.7.0.alpha.2'
+__version__ = '0.7.0.alpha.4'
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -286,6 +287,17 @@ def setup(hass, config):
 
     return True
 
+def is_homekit():
+    for frame in reversed(extract_stack()):
+        try:
+            frame.filename.index("homeassistant/components/homekit")
+            _LOGGER.debug("homekit detected")
+            return True
+        except ValueError:
+            continue
+    _LOGGER.debug("not homekit detected")
+    return False
+
 
 def get_entity_from_domain(hass, domains, entity_id):
     domains = domains if isinstance(domains, list) else [domains]
@@ -296,7 +308,7 @@ def get_entity_from_domain(hass, domains, entity_id):
         entity = component.get_entity(entity_id)
         if entity is not None:
             return entity
-    raise HomeAssistantError("{} not found in {}".format(entity_id,",".join(domains)))
+    raise HomeAssistantError("{} not found in {}".format(entity_id, ",".join(domains)))
 
 
 async def async_aarlo_siren_on(hass, call):
@@ -304,9 +316,9 @@ async def async_aarlo_siren_on(hass, call):
         try:
             volume = call.data['volume']
             duration = call.data['duration']
-            device = get_entity_from_domain(hass,[ALARM_DOMAIN,CAMERA_DOMAIN],entity_id)
+            device = get_entity_from_domain(hass, [ALARM_DOMAIN, CAMERA_DOMAIN], entity_id)
             device.siren_on(duration=duration, volume=volume)
-            _LOGGER.info("{} siren on {}/{}".format(entity_id,volume,duration))
+            _LOGGER.info("{} siren on {}/{}".format(entity_id, volume, duration))
         except HomeAssistantError:
             _LOGGER.info("{} siren device not found".format(entity_id))
 
@@ -318,22 +330,20 @@ async def async_aarlo_sirens_on(hass, call):
     for device in arlo.cameras + arlo.base_stations:
         if device.has_capability(SIREN_STATE_KEY):
             device.siren_on(duration=duration, volume=volume)
-            _LOGGER.info("{} siren on {}/{}".format(device.unique_id,volume,duration))
+            _LOGGER.info("{} siren on {}/{}".format(device.unique_id, volume, duration))
 
 
 async def async_aarlo_siren_off(hass, call):
     for entity_id in call.data['entity_id']:
         try:
-            volume = call.data['volume']
-            duration = call.data['duration']
-            device = get_entity_from_domain(hass,[ALARM_DOMAIN,CAMERA_DOMAIN],entity_id)
+            device = get_entity_from_domain(hass, [ALARM_DOMAIN, CAMERA_DOMAIN], entity_id)
             device.siren_off()
             _LOGGER.info("{} siren off".format(entity_id))
         except HomeAssistantError:
             _LOGGER.info("{} siren not found".format(entity_id))
 
 
-async def async_aarlo_sirens_off(hass, call):
+async def async_aarlo_sirens_off(hass, _call):
     arlo = hass.data[COMPONENT_DATA]
     for device in arlo.cameras + arlo.base_stations:
         if device.has_capability(SIREN_STATE_KEY):
@@ -342,9 +352,7 @@ async def async_aarlo_sirens_off(hass, call):
 
 
 async def async_aarlo_inject_response(hass, call):
-
     patch_file = hass.config.config_dir + '/' + call.data['filename']
-    packet = None
     with open(patch_file) as file:
         packet = json.load(file)
 
